@@ -2,6 +2,7 @@
 
 from rich.console import Console
 from rich.panel import Panel
+from rich.table import Table
 
 from textual.app import App
 from textual.widgets import Placeholder, Button, ButtonPressed
@@ -25,8 +26,6 @@ class Hover(Widget):
     def on_leave(self) -> None:
         self.mouse_over = False
 
-    def on_click(self, event) -> None:
-        self.render(Panel("Clicked!", style=("on teal")))
 
 class HoverApp(App):
     async def on_load(self) -> None:
@@ -39,6 +38,11 @@ class HoverApp(App):
 
 #async def load_menu() -> None:
 
+class DoofConsole(Widget):
+
+    def render(self) -> Console:
+        return Console()
+
 class Doof(App):
 
     async def on_load(self) -> None:
@@ -46,9 +50,17 @@ class Doof(App):
 
     async def on_mount(self) -> None:
         await self.view.dock(Hover(), edge="left", size=20)
-        await self.view.dock(Placeholder(), Placeholder(), edge="top")
+        await self.view.dock(DoofConsole(), edge="top")
 
 #console.print("[blue underline]Looks like a link")
 #HoverApp.run(log="events.log")
+
+class Console(App):
+    async def on_load(self) -> None:
+        await self.bind("q", "quit")
+
+    async def on_mount(self):
+        await self.view.dock(Placeholder(), edge="left", size=25)
+        await self.view.dock(Widget(), edge="top")
 
 Doof.run(log="events.log")
