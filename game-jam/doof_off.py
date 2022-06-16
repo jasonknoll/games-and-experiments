@@ -9,6 +9,7 @@ from textual.widgets import Placeholder, Button, ButtonPressed
 from textual.reactive import Reactive
 from textual.widget import Widget
 
+georgia_text = "საქართველო"
 
 console = Console()
 
@@ -17,7 +18,7 @@ class Hover(Widget):
     mouse_over = Reactive(False)
 
     def render(self) -> Panel:
-        return Panel("Hover Button", style=("on red" if self.mouse_over else ""))
+        return Panel(f"{georgia_text}", style=("on red" if self.mouse_over else ""))
 
 
     def on_enter(self) -> None:
@@ -53,14 +54,24 @@ class Doof(App):
         await self.view.dock(DoofConsole(), edge="top")
 
 #console.print("[blue underline]Looks like a link")
-#HoverApp.run(log="events.log")
+HoverApp.run(log="events.log")
 
-class Console(App):
+
+class TestMenuTable(Widget):
+    def render(self) -> Table:
+        t = Table(show_header=True, header_style="bold")
+        t.add_column("Name")
+        t.add_column("Age")
+
+        t.add_row("Jason", "[teal]21[/teal]")
+        return t
+
+class TestMenu(App):
     async def on_load(self) -> None:
         await self.bind("q", "quit")
-
+    
     async def on_mount(self):
+        await self.view.dock(TestMenuTable(), edge="top")
         await self.view.dock(Placeholder(), edge="left", size=25)
-        await self.view.dock(Widget(), edge="top")
 
-Doof.run(log="events.log")
+#TestMenu.run(log="events.log")
