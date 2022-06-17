@@ -6,7 +6,7 @@ from sqlmodel import Field, SQLModel, create_engine, Session
 class Player(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
-    pos: str
+    position: str
     team: str
     nationality: str
     hand: str
@@ -28,7 +28,7 @@ def add_players_to_db(df: pd.DataFrame, engine) -> None:
     sesh = Session(engine)
 
     for index, row in df.iterrows():
-        p = Player(name=row['name'], pos=row['position'], team=row['team'], nationality=row['nationality'], hand=row['shootsCatches'])
+        p = Player(name=row['name'], position=row['position'], team=row['team'], nationality=row['nationality'], hand=row['shootsCatches'])
         
         sesh.add(p)
 
