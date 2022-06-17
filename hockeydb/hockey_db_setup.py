@@ -1,15 +1,15 @@
-import csv
 from typing import List, Optional
 import pandas as pd
 
-from sqlmodel import Field, SQLModel, create_engine
+from sqlmodel import Field, SQLModel, create_engine, Session
 
 class Player(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
-    position: str
+    pos: str
     team: str
     nationality: str
+    hand: str
 
 skaters_path = 'sheets/skaters.csv'
 
@@ -22,6 +22,20 @@ def show_cols(df: pd.DataFrame) -> None:
     print(list(df.columns))
 
 
+def add_players_to_db(df: pd.DataFrame, engine) -> None:
+    #plyrs = []
+
+    sesh = Session(engine)
+
+    for index, row in df.iterrows():
+        p = Player(name=row['name'], pos=row['position'], team=row['team'], nationality=row['nationality'], hand=row['shootsCatches'])
+        
+        sesh.add(p)
+
+    sesh.commit()
+
+    
+
 skaters = load_csv(skaters_path)
 
 all_players = load_csv('sheets/allPlayersLookup.csv')
@@ -33,4 +47,5 @@ db_url = f'sqlite:///dbs/{all_players_db_name}'
 
 engine = create_engine(db_url, echo=True)
 
-SQLModel.metadata.create_all(engine)
+if __name__ == '__main__':
+    SQLModel.metadata.create_all(engine)
