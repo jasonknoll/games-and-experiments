@@ -45,7 +45,7 @@ all_players = load_csv('sheets/allPlayersLookup.csv')
 all_players_db_name = 'all_players_since_2007.db'
 db_url = f'sqlite:///dbs/{all_players_db_name}'
 
-engine = create_engine(db_url, echo=True)
+engine = create_engine(db_url, echo=False)
 
 if __name__ == '__main__':
     SQLModel.metadata.create_all(engine)
